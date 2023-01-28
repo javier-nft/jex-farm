@@ -1,0 +1,9 @@
+{
+  "name": "init",
+  "steps": [
+    {
+      "step": "externalSteps",
+      "path": "steps/deploy_contract.steps.json"
+    }
+  ]
+}

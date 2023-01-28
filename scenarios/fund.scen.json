@@ -1,0 +1,63 @@
+{
+  "name": "fund (nominal)",
+  "steps": [
+    {
+      "step": "externalSteps",
+      "path": "set_rewards_duration_nominal.scen.json"
+    },
+    {
+      "step": "setState",
+      "accounts": {
+        "address:owner": {
+          "nonce": "1",
+          "balance": "0",
+          "esdt": {
+            "str:RTOK-000000": "10000000,000000"
+          }
+        }
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "fundNominal",
+      "tx": {
+        "from": "address:owner",
+        "to": "sc:farm",
+        "function": "fund",
+        "esdtValue": [
+          {
+            "tokenIdentifier": "str:RTOK-000000",
+            "value": "10000000,000000"
+          }
+        ],
+        "gasLimit": "10,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "0",
+        "message": "",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "checkState",
+      "accounts": {
+        "sc:farm": {
+          "nonce": "0",
+          "balance": "0",
+          "code": "*",
+          "esdt": {
+            "str:RTOK-000000": "10000000,000000"
+          },
+          "storage": {
+            "str:finish_at": "102000000",
+            "str:reward_per_second": "5,000000",
+            "+": ""
+          }
+        },
+        "+": ""
+      }
+    }
+  ]
+}

@@ -15,6 +15,10 @@
             "str:STOK-000000": "10000,000000000000000000"
           }
         }
+      },
+      "currentBlockInfo": {
+        "blockEpoch": "333",
+        "blockTimestamp": "100000000"
       }
     },
     {
@@ -53,6 +57,7 @@
           },
           "storage": {
             "str:balance_of|address:user": "10000,000000000000000000",
+            "str:user_reward_per_token_paid|address:user": "",
             "str:rewards_token": "str:RTOK-000000",
             "str:staking_token": "str:STOK-000000",
             "str:total_staked": "10000,000000000000000000",

@@ -9,5 +9,5 @@ fn world() -> ScenarioWorld {
 
 #[test]
 fn test_rs() {
-    multiversx_sc_scenario::run_rs("scenarios/get_pending_rewards_1.scen.json", world());
+    multiversx_sc_scenario::run_rs("scenarios/get_pending_rewards_2.scen.json", world());
 }

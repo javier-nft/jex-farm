@@ -1,0 +1,57 @@
+{
+  "name": "get pending rewards (2)",
+  "steps": [
+    {
+      "step": "externalSteps",
+      "path": "stake_nominal_2.scen.json"
+    },
+    {
+      "step": "scQuery",
+      "txId": "getPendingRewards2_1",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user"]
+      },
+      "expect": {
+        "out": ["500,000000"],
+        "status": "",
+        "logs": []
+      }
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "100000105"
+      }
+    },
+    {
+      "step": "scQuery",
+      "txId": "getPendingRewards2_2",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user2"]
+      },
+      "expect": {
+        "out": ["12,500000"],
+        "status": "",
+        "logs": []
+      }
+    },
+    {
+      "step": "scQuery",
+      "txId": "getPendingRewards2_3",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user"]
+      },
+      "expect": {
+        "out": ["512,500000"],
+        "status": "",
+        "logs": []
+      }
+    }
+  ]
+}

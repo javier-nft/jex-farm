@@ -2,6 +2,8 @@
 
 multiversx_sc::imports!();
 
+const SAFETY_CONSTANT: u64 = 1_000_000_000_000_000_000u64;
+
 #[multiversx_sc::contract]
 pub trait FarmContract {
     #[init]
@@ -127,7 +129,7 @@ pub trait FarmContract {
             self.reward_per_second()
                 .get()
                 .mul(self.last_time_reward_applicable() - self.updated_at().get())
-                .mul(BigUint::from(10u32).pow(18))
+                .mul(SAFETY_CONSTANT)
                 / self.total_staked().get(),
         );
         rpt
@@ -138,7 +140,7 @@ pub trait FarmContract {
             .balance_of(&account)
             .get()
             .mul(self.compute_reward_per_token() - self.user_reward_per_token_paid(account).get())
-            .div(BigUint::from(10u32).pow(18))
+            .div(SAFETY_CONSTANT)
             .add(self.rewards(account).get());
         earned
     }

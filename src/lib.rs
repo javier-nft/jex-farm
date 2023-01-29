@@ -124,22 +124,22 @@ pub trait FarmContract {
         }
 
         let rpt = self.reward_per_token().get().add(
-            self.reward_per_second().get()
-                * (self.last_time_reward_applicable() - self.updated_at().get())
-                * BigUint::from(10u32).pow(18),
-        ) / self.total_staked().get();
+            self.reward_per_second()
+                .get()
+                .mul(self.last_time_reward_applicable() - self.updated_at().get())
+                .mul(BigUint::from(10u32).pow(18))
+                / self.total_staked().get(),
+        );
         rpt
     }
 
     fn earned(&self, account: &ManagedAddress) -> BigUint {
-        sc_print!(
-            "self.balance_of(&account).get(): {}",
-            self.balance_of(&account).get()
-        );
-        let earned = ((self.balance_of(&account).get()
-            * (self.compute_reward_per_token() - self.user_reward_per_token_paid(account).get()))
-            / BigUint::from(10u32).pow(18))
-            + self.rewards(account).get();
+        let earned = self
+            .balance_of(&account)
+            .get()
+            .mul(self.compute_reward_per_token() - self.user_reward_per_token_paid(account).get())
+            .div(BigUint::from(10u32).pow(18))
+            .add(self.rewards(account).get());
         earned
     }
 

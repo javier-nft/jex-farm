@@ -6,6 +6,8 @@ const SAFETY_CONSTANT: u64 = 1_000_000_000_000_000_000u64;
 
 #[multiversx_sc::contract]
 pub trait FarmContract {
+    /// Initialize the smart contract
+    /// Note that staking_token and rewards_token can be equals
     #[init]
     fn init(&self, staking_token: TokenIdentifier, rewards_token: TokenIdentifier) {
         self.staking_token().set_if_empty(&staking_token);
@@ -56,6 +58,8 @@ pub trait FarmContract {
         );
     }
 
+    /// Set rewards distribution duration (in seconds)
+    /// Can only be called when distribution has not started (or previous one is complete)
     #[endpoint(setRewardsDuration)]
     #[only_owner]
     fn set_rewards_duration(&self, duration: u64) {
@@ -67,6 +71,7 @@ pub trait FarmContract {
 
     // Public Endpoints
 
+    /// Claim rewards
     #[endpoint]
     fn claim(&self) {
         let caller = self.blockchain().get_caller();
@@ -82,6 +87,7 @@ pub trait FarmContract {
         }
     }
 
+    /// Exit (withdraw+claim)
     #[endpoint]
     fn exit(&self) {
         let caller = self.blockchain().get_caller();
@@ -89,6 +95,7 @@ pub trait FarmContract {
         self.claim();
     }
 
+    /// Add tokens to staking
     #[endpoint]
     #[payable("*")]
     fn stake(&self) {
@@ -105,6 +112,8 @@ pub trait FarmContract {
         self.total_staked().update(|x| *x += &payment.amount);
     }
 
+    /// Withdraw tokens from staking
+    /// This endpoint does not claim the rewards
     #[endpoint]
     fn withdraw(&self, amount: BigUint) {
         let caller = self.blockchain().get_caller();

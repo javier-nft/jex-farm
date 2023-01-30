@@ -59,6 +59,11 @@ pub trait FarmContract {
     #[endpoint(setRewardsDuration)]
     #[only_owner]
     fn set_rewards_duration(&self, duration: u64) {
+        sc_print!(
+            "self.blockchain().get_block_timestamp(): {}",
+            self.blockchain().get_block_timestamp()
+        );
+        sc_print!("self.finish_at().get(): {}", self.finish_at().get());
         require!(self.blockchain().get_block_timestamp() > self.finish_at().get(),
             "Previous rewards period must be complete before changing the duration for the new period");
 

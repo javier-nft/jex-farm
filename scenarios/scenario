@@ -15,3 +15,7 @@ total: 20,000
 ts: 100000105
 user1: rewards: 500+12.5
 user2: rewards: 12.5
+
+ts: 100000200
+user1: rewards: 750
+user2: rewards: 250

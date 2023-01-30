@@ -29,6 +29,16 @@ setRewardsDuration() {
         --proxy=${PROXY} --chain=${CHAIN} --send || return
 }
 
+terminate() {
+    LIMIT=${1:-100}
+    GAS_LIMIT=$((5000000 + 500000 * LIMIT))
+
+    erdpy --verbose contract call ${SC_ADDRESS} --recall-nonce --keyfile=${KEYFILE} --gas-limit=${GAS_LIMIT} \
+        --function="terminate" \
+        --arguments ${LIMIT} \
+        --proxy=${PROXY} --chain=${CHAIN} --send || return
+}
+
 ##
 # Views
 ##

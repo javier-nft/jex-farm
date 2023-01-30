@@ -71,32 +71,36 @@ pub trait FarmContract {
 
     // Public Endpoints
 
+    #[endpoint]
+    #[only_owner]
+    fn terminate(&self, limit: usize) {
+        require!(
+            self.blockchain().get_block_timestamp() > self.finish_at().get(),
+            "Reward period is not complete"
+        );
+
+        require!(!self.all_stakers().is_empty(), "No stakers");
+
+        for _ in 0..limit {
+            let address = self.all_stakers().get_by_index(1);
+            self.exit_for_account(&address);
+
+            if self.all_stakers().is_empty() {
+                break;
+            }
+        }
+    }
+
     /// Claim rewards
     #[endpoint]
     fn claim(&self) {
-        let caller = self.blockchain().get_caller();
-        self.update_reward(&caller);
-
-        let reward = self.rewards(&caller).get();
-
-        if reward > 0 {
-            self.rewards(&caller).clear();
-
-            self.send()
-                .direct_esdt(&caller, &self.rewards_token().get(), 0, &reward);
-        }
+        self.claim_for_account(&self.blockchain().get_caller());
     }
 
     /// Exit (withdraw+claim)
     #[endpoint]
     fn exit(&self) {
-        let caller = self.blockchain().get_caller();
-
-        self.withdraw(self.balance_of(&caller).get());
-
-        self.claim();
-
-        self.all_stakers().swap_remove(&caller);
+        self.exit_for_account(&self.blockchain().get_caller());
     }
 
     /// Add tokens to staking
@@ -122,24 +126,23 @@ pub trait FarmContract {
     /// This endpoint does not claim the rewards
     #[endpoint]
     fn withdraw(&self, amount: BigUint) {
-        let caller = self.blockchain().get_caller();
-
-        require!(amount <= self.balance_of(&caller).get(), "Invalid amount");
-
-        self.update_reward(&caller);
-
-        self.total_staked().update(|x| *x -= &amount);
-        self.balance_of(&caller).update(|x| *x -= &amount);
-
-        if self.balance_of(&caller).is_empty() {
-            self.all_stakers().swap_remove(&caller);
-        }
-
-        self.send()
-            .direct_esdt(&caller, &self.staking_token().get(), 0, &amount);
+        self.withdraw_for_account(&self.blockchain().get_caller(), &amount);
     }
 
     // Functions
+
+    fn claim_for_account(&self, account: &ManagedAddress) {
+        self.update_reward(&account);
+
+        let reward = self.rewards(&account).get();
+
+        if reward > 0 {
+            self.rewards(&account).clear();
+
+            self.send()
+                .direct_esdt(&account, &self.rewards_token().get(), 0, &reward);
+        }
+    }
 
     fn compute_reward_per_token(&self) -> BigUint {
         if self.total_staked().is_empty() {
@@ -166,6 +169,14 @@ pub trait FarmContract {
         earned
     }
 
+    fn exit_for_account(&self, account: &ManagedAddress) {
+        self.withdraw_for_account(account, &self.balance_of(account).get());
+
+        self.claim_for_account(&account);
+
+        self.all_stakers().swap_remove(&account);
+    }
+
     fn last_time_reward_applicable(&self) -> u64 {
         let ts = u64::min(
             self.finish_at().get(),
@@ -183,13 +194,37 @@ pub trait FarmContract {
             .set(self.reward_per_token().get());
     }
 
+    fn withdraw_for_account(&self, account: &ManagedAddress, amount: &BigUint) {
+        sc_print!(
+            "self.balance_of(account).get(): {}",
+            self.balance_of(account).get()
+        );
+        require!(amount <= &self.balance_of(account).get(), "Invalid amount");
+
+        self.update_reward(account);
+
+        self.total_staked().update(|x| *x -= amount);
+        self.balance_of(account).update(|x| *x -= amount);
+
+        if self.balance_of(account).is_empty() {
+            self.all_stakers().swap_remove(account);
+        }
+
+        self.send()
+            .direct_esdt(account, &self.staking_token().get(), 0, amount);
+    }
+
     // Storage & Views
 
     #[view(getAllStakers)]
-    fn get_all_stakers(&self, from: usize, size: usize) -> ManagedVec<Self::Api, ManagedAddress> {
+    fn get_all_stakers(
+        &self,
+        from: usize,
+        size: usize,
+    ) -> MultiValueEncoded<Self::Api, ManagedAddress> {
         let stakers: ManagedVec<Self::Api, ManagedAddress> =
             self.all_stakers().iter().skip(from).take(size).collect();
-        stakers
+        stakers.into()
     }
 
     #[view(getPendingRewards)]

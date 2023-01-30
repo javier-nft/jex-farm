@@ -5,9 +5,9 @@
 ////////////////////////////////////////////////////
 
 // Init:                                 1
-// Endpoints:                           19
+// Endpoints:                           20
 // Async Callback (empty):               1
-// Total number of exported functions:  21
+// Total number of exported functions:  22
 
 #![no_std]
 #![feature(alloc_error_handler, lang_items)]
@@ -20,6 +20,7 @@ multiversx_sc_wasm_adapter::endpoints! {
     (
         fund
         setRewardsDuration
+        terminate
         claim
         exit
         stake

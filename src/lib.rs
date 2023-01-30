@@ -91,8 +91,12 @@ pub trait FarmContract {
     #[endpoint]
     fn exit(&self) {
         let caller = self.blockchain().get_caller();
+
         self.withdraw(self.balance_of(&caller).get());
+
         self.claim();
+
+        self.all_stakers().swap_remove(&caller);
     }
 
     /// Add tokens to staking
@@ -110,6 +114,8 @@ pub trait FarmContract {
 
         self.balance_of(&caller).update(|x| *x += &payment.amount);
         self.total_staked().update(|x| *x += &payment.amount);
+
+        self.all_stakers().insert(caller);
     }
 
     /// Withdraw tokens from staking
@@ -124,6 +130,10 @@ pub trait FarmContract {
 
         self.total_staked().update(|x| *x -= &amount);
         self.balance_of(&caller).update(|x| *x -= &amount);
+
+        if self.balance_of(&caller).is_empty() {
+            self.all_stakers().swap_remove(&caller);
+        }
 
         self.send()
             .direct_esdt(&caller, &self.staking_token().get(), 0, &amount);
@@ -175,10 +185,20 @@ pub trait FarmContract {
 
     // Storage & Views
 
+    #[view(getAllStakers)]
+    fn get_all_stakers(&self, from: usize, size: usize) -> ManagedVec<Self::Api, ManagedAddress> {
+        let stakers: ManagedVec<Self::Api, ManagedAddress> =
+            self.all_stakers().iter().skip(from).take(size).collect();
+        stakers
+    }
+
     #[view(getPendingRewards)]
     fn get_pending_rewards(&self, account: &ManagedAddress) -> BigUint {
         return self.earned(account);
     }
+
+    #[storage_mapper("all_stakers")]
+    fn all_stakers(&self) -> UnorderedSetMapper<ManagedAddress>;
 
     #[view(getBalanceOf)]
     #[storage_mapper("balance_of")]

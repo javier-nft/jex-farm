@@ -56,6 +56,9 @@
             "str:STOK-000000": "20000,000000000000000000"
           },
           "storage": {
+            "str:all_stakers.len": "2",
+            "str:all_stakers.item|u32:1": "address:user1",
+            "str:all_stakers.item|u32:2": "address:user2",
             "str:balance_of|address:user1": "10000,000000000000000000",
             "str:balance_of|address:user2": "10000,000000000000000000",
             "str:user_reward_per_token_paid|address:user1": "",

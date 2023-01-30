@@ -33,6 +33,14 @@ setRewardsDuration() {
 # Views
 ##
 
+getAllStakers() {
+    read -p "From: " FROM
+    read -p "Size: " SIZE
+    erdpy --verbose contract query ${SC_ADDRESS} \
+        --function "getAllStakers" --arguments "${FROM}" "${SIZE}" \
+        --proxy=${PROXY}
+}
+
 getBalanceOf() {
     read -p "Address: " ADDRESS
     ADDRESS="0x$(erdpy wallet bech32 --decode ${ADDRESS})"

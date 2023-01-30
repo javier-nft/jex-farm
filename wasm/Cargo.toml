@@ -3,7 +3,7 @@ name = "jex-sc-farm-wasm"
 version = "0.0.0"
 edition = "2018"
 publish = false
-authors = [ "you",]
+authors = [ "Aurélien Passion <aurelien.passion@gmail.com>",]
 
 [lib]
 crate-type = [ "cdylib",]

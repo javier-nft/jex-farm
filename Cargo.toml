@@ -1,7 +1,7 @@
 [package]
 name = "jex-sc-farm"
 version = "0.0.0"
-authors = [ "you",]
+authors = [ "Aurélien Passion <aurelien.passion@gmail.com>",]
 edition = "2018"
 publish = false
 

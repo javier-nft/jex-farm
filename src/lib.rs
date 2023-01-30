@@ -109,6 +109,8 @@ pub trait FarmContract {
     fn withdraw(&self, amount: BigUint) {
         let caller = self.blockchain().get_caller();
 
+        require!(amount <= self.balance_of(&caller).get(), "Invalid amount");
+
         self.update_reward(&caller);
 
         self.total_staked().update(|x| *x -= &amount);

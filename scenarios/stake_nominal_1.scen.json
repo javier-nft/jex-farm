@@ -8,7 +8,7 @@
     {
       "step": "setState",
       "accounts": {
-        "address:user": {
+        "address:user1": {
           "nonce": "0",
           "balance": "0",
           "esdt": {
@@ -25,7 +25,7 @@
       "step": "scCall",
       "txId": "stakeNominal",
       "tx": {
-        "from": "address:user",
+        "from": "address:user1",
         "to": "sc:farm",
         "function": "stake",
         "esdtValue": [
@@ -56,8 +56,8 @@
             "str:STOK-000000": "10000,000000000000000000"
           },
           "storage": {
-            "str:balance_of|address:user": "10000,000000000000000000",
-            "str:user_reward_per_token_paid|address:user": "",
+            "str:balance_of|address:user1": "10000,000000000000000000",
+            "str:user_reward_per_token_paid|address:user1": "",
             "str:rewards_token": "str:RTOK-000000",
             "str:staking_token": "str:STOK-000000",
             "str:total_staked": "10000,000000000000000000",

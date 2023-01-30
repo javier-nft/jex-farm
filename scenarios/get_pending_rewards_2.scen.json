@@ -11,7 +11,7 @@
       "tx": {
         "to": "sc:farm",
         "function": "getPendingRewards",
-        "arguments": ["address:user"]
+        "arguments": ["address:user1"]
       },
       "expect": {
         "out": ["500,000000"],
@@ -45,7 +45,7 @@
       "tx": {
         "to": "sc:farm",
         "function": "getPendingRewards",
-        "arguments": ["address:user"]
+        "arguments": ["address:user1"]
       },
       "expect": {
         "out": ["512,500000"],

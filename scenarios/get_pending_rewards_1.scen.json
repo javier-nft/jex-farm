@@ -3,7 +3,7 @@
   "steps": [
     {
       "step": "externalSteps",
-      "path": "stake_nominal.scen.json"
+      "path": "stake_nominal_1.scen.json"
     },
     {
       "step": "setState",
@@ -16,7 +16,7 @@
       "tx": {
         "to": "sc:farm",
         "function": "getPendingRewards",
-        "arguments": ["address:user"]
+        "arguments": ["address:user1"]
       },
       "expect": {
         "out": ["5,000000"],
@@ -35,7 +35,7 @@
       "tx": {
         "to": "sc:farm",
         "function": "getPendingRewards",
-        "arguments": ["address:user"]
+        "arguments": ["address:user1"]
       },
       "expect": {
         "out": ["25,000000"],

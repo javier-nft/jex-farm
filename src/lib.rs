@@ -1,8 +1,19 @@
 #![no_std]
 
 multiversx_sc::imports!();
+multiversx_sc::derive_imports!();
 
 const SAFETY_CONSTANT: u64 = 1_000_000_000_000_000_000u64;
+
+#[derive(TopEncode, TypeAbi)]
+pub struct Status<M: ManagedTypeApi> {
+    finish_at: u64,
+    nb_stakers: usize,
+    reward_per_second: BigUint<M>,
+    rewards_token: TokenIdentifier<M>,
+    staking_token: TokenIdentifier<M>,
+    total_staked: BigUint<M>,
+}
 
 #[multiversx_sc::contract]
 pub trait FarmContract {
@@ -231,6 +242,18 @@ pub trait FarmContract {
     }
 
     // Storage & Views
+
+    #[view(getStatus)]
+    fn get_status(&self) -> Status<Self::Api> {
+        Status::<Self::Api> {
+            finish_at: self.finish_at().get(),
+            nb_stakers: self.all_stakers().len(),
+            reward_per_second: self.reward_per_second().get(),
+            rewards_token: self.rewards_token().get(),
+            staking_token: self.staking_token().get(),
+            total_staked: self.total_staked().get(),
+        }
+    }
 
     #[view(getAllStakers)]
     fn get_all_stakers(

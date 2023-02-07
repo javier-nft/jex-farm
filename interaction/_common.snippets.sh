@@ -89,6 +89,10 @@ getStakingToken() {
     erdpy --verbose contract query ${SC_ADDRESS} --function "getStakingToken" --proxy=${PROXY}
 }
 
+getStatus() {
+    erdpy --verbose contract query ${SC_ADDRESS} --function "getStatus" --proxy=${PROXY}
+}
+
 getTotalStaked() {
     erdpy --verbose contract query ${SC_ADDRESS} --function "getTotalStaked" --proxy=${PROXY}
 }

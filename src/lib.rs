@@ -24,24 +24,24 @@ pub trait FarmContract {
     #[only_owner]
     #[payable("*")]
     fn fund(&self) {
-        let payment = self.call_value().single_esdt();
+        let (token_identifier, amount) = self.call_value().single_fungible_esdt();
 
         require!(
-            payment.token_identifier == self.rewards_token().get(),
+            token_identifier == self.rewards_token().get(),
             "Wrong rewards token"
         );
 
         let block_ts = self.blockchain().get_block_timestamp();
         if block_ts >= self.finish_at().get() {
             self.reward_per_second()
-                .set(payment.amount / self.rewards_duration().get());
+                .set(amount / self.rewards_duration().get());
         } else {
             let leftover = self
                 .reward_per_second()
                 .get()
                 .mul(self.finish_at().get() - block_ts);
             self.reward_per_second()
-                .set((payment.amount + leftover) / self.rewards_duration().get());
+                .set((amount + leftover) / self.rewards_duration().get());
         }
 
         let balance = self.blockchain().get_sc_balance(
@@ -79,14 +79,30 @@ pub trait FarmContract {
             "Reward period is not complete"
         );
 
-        require!(!self.all_stakers().is_empty(), "No stakers");
+        if !self.all_stakers().is_empty() {
+            for _ in 0..limit {
+                let address = self.all_stakers().get_by_index(1);
+                self.exit_for_account(&address);
 
-        for _ in 0..limit {
-            let address = self.all_stakers().get_by_index(1);
-            self.exit_for_account(&address);
+                if self.all_stakers().is_empty() {
+                    break;
+                }
+            }
+        }
 
-            if self.all_stakers().is_empty() {
-                break;
+        if self.all_stakers().is_empty() {
+            let rewards_token = self.rewards_token().get();
+            let balance = self
+                .blockchain()
+                .get_sc_balance(&EgldOrEsdtTokenIdentifier::esdt(rewards_token.clone()), 0);
+
+            if balance > 0 {
+                self.send().direct_esdt(
+                    &self.blockchain().get_owner_address(),
+                    &rewards_token,
+                    0,
+                    &balance,
+                );
             }
         }
     }

@@ -44,7 +44,7 @@ terminate() {
 ##
 
 getAllStakers() {
-    SKIP=${1:-0}
+    FROM=${1:-0}
     SIZE=${2:-10}
     erdpy --verbose contract query ${SC_ADDRESS} \
         --function "getAllStakers" --arguments "${FROM}" "${SIZE}" \

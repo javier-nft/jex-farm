@@ -28,6 +28,7 @@ pub trait FarmContract {
     // Owner Endpoints
 
     /// Fund and start rewards distribution
+    /// Extend distribution if ongoing
     /// Important: make sure the payment amount can be divided by the rewards duration.
     /// Eg: 1000,000000 as rewards for 3600 seconds -> fail
     /// Eg: 1000,000000 as rewards for 4000 seconds -> OK (0,250000 per second)

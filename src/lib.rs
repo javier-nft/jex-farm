@@ -80,8 +80,6 @@ pub trait FarmContract {
         self.rewards_duration().set(duration);
     }
 
-    // Public Endpoints
-
     #[endpoint]
     #[only_owner]
     fn terminate(&self, limit: usize) {
@@ -117,6 +115,8 @@ pub trait FarmContract {
             }
         }
     }
+
+    // Public Endpoints
 
     /// Claim rewards
     #[endpoint]

@@ -1,0 +1,71 @@
+{
+  "name": "stake (not started)",
+  "steps": [
+    {
+      "step": "externalSteps",
+      "path": "steps/deploy_contract.steps.json"
+    },
+    {
+      "step": "setState",
+      "accounts": {
+        "address:user1": {
+          "nonce": "0",
+          "balance": "0",
+          "esdt": {
+            "str:STOK-000000": "10000,000000000000000000"
+          }
+        }
+      },
+      "currentBlockInfo": {
+        "blockEpoch": "333",
+        "blockTimestamp": "100000000"
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "stakeNominal",
+      "tx": {
+        "from": "address:user1",
+        "to": "sc:farm",
+        "function": "stake",
+        "esdtValue": [
+          {
+            "tokenIdentifier": "str:STOK-000000",
+            "value": "10000,000000000000000000"
+          }
+        ],
+        "gasLimit": "6,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "0",
+        "message": "",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "checkState",
+      "accounts": {
+        "sc:farm": {
+          "nonce": "0",
+          "balance": "0",
+          "code": "*",
+          "esdt": {
+            "str:STOK-000000": "10000,000000000000000000"
+          },
+          "storage": {
+            "str:all_stakers.len": "1",
+            "str:all_stakers.item|u32:1": "address:user1",
+            "str:balance_of|address:user1": "10000,000000000000000000",
+            "str:user_reward_per_token_paid|address:user1": "",
+            "str:staking_token": "str:STOK-000000",
+            "str:total_staked": "10000,000000000000000000",
+            "+": ""
+          }
+        },
+        "+": ""
+      }
+    }
+  ]
+}

@@ -1,4 +1,10 @@
+use multiversx_sc_scenario::*;
+
+fn world() -> ScenarioWorld {
+    ScenarioWorld::vm_go()
+}
+
 #[test]
-fn test_go() {
-    multiversx_sc_scenario::run_go("scenarios/empty.scen.json");
+fn empty_go() {
+    world().run("scenarios/init.scen.json");
 }

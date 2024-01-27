@@ -25,6 +25,9 @@ pub trait FarmContract {
         self.rewards_token().set_if_empty(&rewards_token);
     }
 
+    #[upgrade]
+    fn upgrade(&self) {}
+
     // Owner Endpoints
 
     /// Fund and start rewards distribution

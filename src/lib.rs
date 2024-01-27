@@ -223,10 +223,6 @@ pub trait FarmContract {
     }
 
     fn withdraw_for_account(&self, account: &ManagedAddress, amount: &BigUint) {
-        sc_print!(
-            "self.balance_of(account).get(): {}",
-            self.balance_of(account).get()
-        );
         require!(amount <= &self.balance_of(account).get(), "Invalid amount");
 
         self.update_reward(account);

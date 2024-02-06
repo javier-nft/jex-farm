@@ -1,0 +1,64 @@
+{
+  "name": "exit (nominal) (1)",
+  "steps": [
+    {
+      "step": "externalSteps",
+      "path": "stake_nominal_1.scen.json"
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "100000100"
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "exitNominal",
+      "tx": {
+        "from": "address:user1",
+        "to": "sc:farm",
+        "function": "exit",
+        "gasLimit": "8,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "0",
+        "message": "",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "checkState",
+      "accounts": {
+        "address:user1": {
+          "nonce": "2",
+          "balance": "0",
+          "esdt": {
+            "str:RTOK-000000": "500,000000",
+            "str:STOK-000000": "10,000,000000000000000000"
+          }
+        },
+        "sc:farm": {
+          "nonce": "0",
+          "balance": "0",
+          "code": "*",
+          "esdt": {
+            "str:RTOK-000000": "9999500,000000",
+            "str:STOK-000000": "0"
+          },
+          "storage": {
+            "str:all_stakers.len": "0",
+            "str:balance_of|address:user1": "",
+            "str:user_reward_per_token_paid|address:user1": "0,050000",
+            "str:rewards_token": "str:RTOK-000000",
+            "str:staking_token": "str:STOK-000000",
+            "str:total_staked": "",
+            "+": ""
+          }
+        },
+        "+": ""
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+[package]
+name = "jex-sc-farm-meta"
+version = "0.0.0"
+edition = "2018"
+publish = false
+authors = [ "Aurélien Passion <aurelien.passion@gmail.com>",]
+
+[dev-dependencies]
+
+[dependencies.jex-sc-farm]
+path = ".."
+
+[dependencies.multiversx-sc-meta]
+version = "0.46.1"

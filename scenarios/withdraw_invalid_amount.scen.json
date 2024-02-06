@@ -1,0 +1,33 @@
+{
+  "name": "withdraw (invalid amount)",
+  "steps": [
+    {
+      "step": "externalSteps",
+      "path": "stake_nominal_1.scen.json"
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "100000100"
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "withdrawInvalidAmount",
+      "tx": {
+        "from": "address:user1",
+        "to": "sc:farm",
+        "function": "withdraw",
+        "arguments": ["20,000,000000000000000000"],
+        "gasLimit": "6,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "4",
+        "message": "str:Invalid amount",
+        "gas": "*",
+        "refund": "*"
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "set rewards duration (nominal)",
+  "steps": [
+    {
+      "step": "externalSteps",
+      "path": "steps/deploy_contract.steps.json"
+    },
+    {
+      "step": "scCall",
+      "txId": "setRewardsDurationNominal",
+      "tx": {
+        "from": "address:owner",
+        "to": "sc:farm",
+        "function": "setRewardsDuration",
+        "arguments": ["2000000"],
+        "gasLimit": "4,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "0",
+        "message": "",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "checkState",
+      "accounts": {
+        "sc:farm": {
+          "nonce": "0",
+          "balance": "0",
+          "code": "*",
+          "storage": {
+            "str:rewards_duration": "2000000",
+            "+": ""
+          }
+        },
+        "+": ""
+      }
+    }
+  ]
+}

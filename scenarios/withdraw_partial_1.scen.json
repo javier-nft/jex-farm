@@ -1,0 +1,66 @@
+{
+  "name": "withdraw (partial) (1)",
+  "steps": [
+    {
+      "step": "externalSteps",
+      "path": "stake_nominal_1.scen.json"
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "100000100"
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "withdrawPartial",
+      "tx": {
+        "from": "address:user1",
+        "to": "sc:farm",
+        "function": "withdraw",
+        "arguments": ["5,000,000000000000000000"],
+        "gasLimit": "6,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "0",
+        "message": "",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "checkState",
+      "accounts": {
+        "address:user1": {
+          "nonce": "2",
+          "balance": "0",
+          "esdt": {
+            "str:RTOK-000000": "",
+            "str:STOK-000000": "5,000,000000000000000000"
+          }
+        },
+        "sc:farm": {
+          "nonce": "0",
+          "balance": "0",
+          "code": "*",
+          "esdt": {
+            "str:RTOK-000000": "10000000,000000",
+            "str:STOK-000000": "5,000,000000000000000000"
+          },
+          "storage": {
+            "str:all_stakers.len": "1",
+            "str:all_stakers.item|u32:1": "address:user1",
+            "str:balance_of|address:user1": "5,000,000000000000000000",
+            "str:user_reward_per_token_paid|address:user1": "0,050000",
+            "str:rewards_token": "str:RTOK-000000",
+            "str:staking_token": "str:STOK-000000",
+            "str:total_staked": "5,000,000000000000000000",
+            "+": ""
+          }
+        },
+        "+": ""
+      }
+    }
+  ]
+}

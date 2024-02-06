@@ -1,0 +1,44 @@
+{
+  "name": "fund (wrong token)",
+  "steps": [
+    {
+      "step": "externalSteps",
+      "path": "init.scen.json"
+    },
+    {
+      "step": "setState",
+      "accounts": {
+        "address:owner": {
+          "nonce": "1",
+          "balance": "0",
+          "esdt": {
+            "str:OTHER-000000": "10000000,000000"
+          }
+        }
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "fundNotOwner",
+      "tx": {
+        "from": "address:owner",
+        "to": "sc:farm",
+        "function": "fund",
+        "esdtValue": [
+          {
+            "tokenIdentifier": "str:OTHER-000000",
+            "value": "10000000,000000"
+          }
+        ],
+        "gasLimit": "5,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "4",
+        "message": "str:Wrong rewards token",
+        "gas": "*",
+        "refund": "*"
+      }
+    }
+  ]
+}

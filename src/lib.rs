@@ -9,6 +9,7 @@ const SAFETY_CONSTANT: u64 = 1_000_000_000_000_000_000u64;
 pub struct Status<M: ManagedTypeApi> {
     finish_at: u64,
     nb_stakers: usize,
+    owner: ManagedAddress<M>,
     reward_per_second: BigUint<M>,
     rewards_token: TokenIdentifier<M>,
     staking_token: TokenIdentifier<M>,
@@ -248,6 +249,7 @@ pub trait FarmContract {
         Status::<Self::Api> {
             finish_at: self.finish_at().get(),
             nb_stakers: self.all_stakers().len(),
+            owner: self.blockchain().get_owner_address(),
             reward_per_second: self.reward_per_second().get(),
             rewards_token: self.rewards_token().get(),
             staking_token: self.staking_token().get(),

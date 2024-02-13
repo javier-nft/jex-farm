@@ -1,0 +1,321 @@
+{
+  "name": "E2E scenario",
+  "steps": [
+    {
+      "step": "externalSteps",
+      "path": "steps/deploy_contract.steps.json"
+    },
+    {
+      "step": "setState",
+      "accounts": {
+        "address:owner": {
+          "nonce": "1",
+          "balance": "0",
+          "esdt": {
+            "str:RTOK-000000": "10000000,000000"
+          }
+        },
+        "address:user1": {
+          "nonce": "0",
+          "balance": "0",
+          "esdt": {
+            "str:STOK-000000": "10000,000000000000000000"
+          }
+        },
+        "address:user2": {
+          "nonce": "0",
+          "balance": "0",
+          "esdt": {
+            "str:STOK-000000": "20000,000000000000000000"
+          }
+        }
+      },
+      "currentBlockInfo": {
+        "blockTimestamp": "100000"
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "stake1",
+      "tx": {
+        "from": "address:user1",
+        "to": "sc:farm",
+        "function": "stake",
+        "esdtValue": [
+          {
+            "tokenIdentifier": "str:STOK-000000",
+            "value": "10000,000000000000000000"
+          }
+        ],
+        "gasLimit": "6,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "0",
+        "message": "",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "103600"
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "stake2",
+      "tx": {
+        "from": "address:user2",
+        "to": "sc:farm",
+        "function": "stake",
+        "esdtValue": [
+          {
+            "tokenIdentifier": "str:STOK-000000",
+            "value": "20000,000000000000000000"
+          }
+        ],
+        "gasLimit": "6,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "0",
+        "message": "",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "200000"
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "setRewardsDuration",
+      "tx": {
+        "from": "address:owner",
+        "to": "sc:farm",
+        "function": "setRewardsDuration",
+        "arguments": ["1,000,000"],
+        "gasLimit": "4,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "0",
+        "message": "",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "fund",
+      "tx": {
+        "from": "address:owner",
+        "to": "sc:farm",
+        "function": "fund",
+        "esdtValue": [
+          {
+            "tokenIdentifier": "str:RTOK-000000",
+            "value": "10000000,000000"
+          }
+        ],
+        "gasLimit": "5,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "0",
+        "message": "",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "scQuery",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user1"]
+      },
+      "expect": {
+        "out": ["0"],
+        "status": "",
+        "logs": []
+      }
+    },
+    {
+      "step": "scQuery",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user2"]
+      },
+      "expect": {
+        "out": ["0"],
+        "status": "",
+        "logs": []
+      }
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "200100"
+      }
+    },
+    {
+      "step": "scQuery",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user1"]
+      },
+      "expect": {
+        "out": ["333,330000"],
+        "status": "",
+        "logs": []
+      }
+    },
+    {
+      "step": "scQuery",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user2"]
+      },
+      "expect": {
+        "out": ["666,660000"],
+        "status": "",
+        "logs": []
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "claim1",
+      "tx": {
+        "from": "address:user1",
+        "to": "sc:farm",
+        "function": "claim",
+        "gasLimit": "6,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "0",
+        "message": "",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "checkState",
+      "accounts": {
+        "address:user1": {
+          "nonce": "2",
+          "balance": "0",
+          "esdt": {
+            "str:RTOK-000000": "333,330000",
+            "str:STOK-000000": ""
+          }
+        },
+        "+": ""
+      }
+    },
+    {
+      "step": "scQuery",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user1"]
+      },
+      "expect": {
+        "out": ["0"],
+        "status": "",
+        "logs": []
+      }
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "200200"
+      }
+    },
+    {
+      "step": "scQuery",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user1"]
+      },
+      "expect": {
+        "out": ["333,330000"],
+        "status": "",
+        "logs": []
+      }
+    },
+    {
+      "step": "scQuery",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user2"]
+      },
+      "expect": {
+        "out": ["1333,320000"],
+        "status": "",
+        "logs": []
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "exit1",
+      "tx": {
+        "from": "address:user1",
+        "to": "sc:farm",
+        "function": "exit",
+        "gasLimit": "8,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "0",
+        "message": "",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "checkState",
+      "accounts": {
+        "address:user1": {
+          "nonce": "3",
+          "balance": "0",
+          "esdt": {
+            "str:RTOK-000000": "666,660000",
+            "str:STOK-000000": "10000,000000000000000000"
+          }
+        },
+        "+": ""
+      }
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "200300"
+      }
+    },
+    {
+      "step": "scQuery",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user2"]
+      },
+      "expect": {
+        "out": ["2333,320000"],
+        "status": "",
+        "logs": []
+      }
+    }
+  ]
+}

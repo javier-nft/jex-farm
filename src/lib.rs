@@ -72,6 +72,8 @@ pub trait FarmContract {
             0,
         );
 
+        self.updated_at().set(block_ts);
+
         let finish_at = block_ts + self.rewards_duration().get();
         self.finish_at().set(finish_at);
 
@@ -155,8 +157,8 @@ pub trait FarmContract {
         let caller = self.blockchain().get_caller();
         self.update_reward(&caller);
 
-        self.balance_of(&caller).update(|x| *x += &payment.amount);
         self.total_staked().update(|x| *x += &payment.amount);
+        self.balance_of(&caller).update(|x| *x += &payment.amount);
 
         self.all_stakers().insert(caller);
     }
@@ -188,24 +190,21 @@ pub trait FarmContract {
             return self.reward_per_token().get();
         }
 
-        let rpt = self.reward_per_token().get().add(
+        self.reward_per_token().get().add(
             self.reward_per_second()
                 .get()
                 .mul(self.last_time_reward_applicable() - self.updated_at().get())
                 .mul(SAFETY_CONSTANT)
                 / self.total_staked().get(),
-        );
-        rpt
+        )
     }
 
     fn earned(&self, account: &ManagedAddress) -> BigUint {
-        let earned = self
-            .balance_of(&account)
+        self.balance_of(&account)
             .get()
             .mul(self.compute_reward_per_token() - self.user_reward_per_token_paid(account).get())
             .div(SAFETY_CONSTANT)
-            .add(self.rewards(account).get());
-        earned
+            .add(self.rewards(account).get())
     }
 
     fn exit_for_account(&self, account: &ManagedAddress) {
@@ -217,11 +216,10 @@ pub trait FarmContract {
     }
 
     fn last_time_reward_applicable(&self) -> u64 {
-        let ts = u64::min(
+        u64::min(
             self.finish_at().get(),
             self.blockchain().get_block_timestamp(),
-        );
-        ts
+        )
     }
 
     fn update_reward(&self, account: &ManagedAddress) {

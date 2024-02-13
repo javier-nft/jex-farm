@@ -28,6 +28,13 @@
           "esdt": {
             "str:STOK-000000": "20000,000000000000000000"
           }
+        },
+        "address:user3": {
+          "nonce": "0",
+          "balance": "0",
+          "esdt": {
+            "str:STOK-000000": "80000,000000000000000000"
+          }
         }
       },
       "currentBlockInfo": {
@@ -315,6 +322,201 @@
         "out": ["2333,320000"],
         "status": "",
         "logs": []
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "claim2",
+      "tx": {
+        "from": "address:user2",
+        "to": "sc:farm",
+        "function": "claim",
+        "gasLimit": "6,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "0",
+        "message": "",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "checkState",
+      "accounts": {
+        "address:user2": {
+          "nonce": "2",
+          "balance": "0",
+          "esdt": {
+            "str:RTOK-000000": "2333,320000",
+            "str:STOK-000000": "0"
+          }
+        },
+        "sc:farm": {
+          "balance": "0",
+          "code": "*",
+          "esdt": {
+            "str:RTOK-000000": "9997000,020000",
+            "str:STOK-000000": "20000,000000000000000000"
+          }
+        },
+        "+": ""
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "stake3",
+      "tx": {
+        "from": "address:user3",
+        "to": "sc:farm",
+        "function": "stake",
+        "esdtValue": [
+          {
+            "tokenIdentifier": "str:STOK-000000",
+            "value": "80000,000000000000000000"
+          }
+        ],
+        "gasLimit": "6,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "0",
+        "message": "",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "1,200,000"
+      }
+    },
+    {
+      "step": "scQuery",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user2"]
+      },
+      "expect": {
+        "out": ["1999400,000000"],
+        "status": "",
+        "logs": []
+      }
+    },
+    {
+      "step": "scQuery",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user3"]
+      },
+      "expect": {
+        "out": ["7997600,000000"],
+        "status": "",
+        "logs": []
+      }
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "1,500,000"
+      }
+    },
+    {
+      "step": "scQuery",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user2"]
+      },
+      "expect": {
+        "out": ["1999400,000000"],
+        "status": "",
+        "logs": []
+      }
+    },
+    {
+      "step": "scQuery",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user3"]
+      },
+      "expect": {
+        "out": ["7997600,000000"],
+        "status": "",
+        "logs": []
+      }
+    },
+    {
+      "step": "scQuery",
+      "txId": "getAllStakers",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getAllStakers",
+        "arguments": ["0", "10"]
+      },
+      "expect": {
+        "out": ["address:user2", "address:user3"],
+        "status": "",
+        "logs": []
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "terminateNominal",
+      "tx": {
+        "from": "address:owner",
+        "to": "sc:farm",
+        "function": "terminate",
+        "arguments": ["10"],
+        "gasLimit": "10,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "0",
+        "message": "",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "checkState",
+      "accounts": {
+        "address:user2": {
+          "nonce": "2",
+          "balance": "0",
+          "esdt": {
+            "str:RTOK-000000": "2001733,320000",
+            "str:STOK-000000": "20000,000000000000000000"
+          }
+        },
+        "address:user3": {
+          "nonce": "1",
+          "balance": "0",
+          "esdt": {
+            "str:RTOK-000000": "7997600,000000",
+            "str:STOK-000000": "80000,000000000000000000"
+          }
+        },
+        "address:owner": {
+          "nonce": "4",
+          "balance": "0",
+          "esdt": {
+            "str:RTOK-000000": "0,020000"
+          }
+        },
+        "sc:farm": {
+          "balance": "0",
+          "code": "*",
+          "esdt": {
+            "str:RTOK-000000": "",
+            "str:STOK-000000": ""
+          }
+        },
+        "+": ""
       }
     }
   ]

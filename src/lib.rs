@@ -11,9 +11,16 @@ pub struct Status<M: ManagedTypeApi> {
     nb_stakers: usize,
     owner: ManagedAddress<M>,
     reward_per_second: BigUint<M>,
+    rewards_duration: u64,
     rewards_token: TokenIdentifier<M>,
     staking_token: TokenIdentifier<M>,
     total_staked: BigUint<M>,
+}
+
+#[derive(TopEncode, TypeAbi)]
+pub struct AccountStatus<M: ManagedTypeApi> {
+    staked_amount: BigUint<M>,
+    pending_rewards: BigUint<M>,
 }
 
 #[multiversx_sc::contract]
@@ -244,6 +251,14 @@ pub trait FarmContract {
 
     // Storage & Views
 
+    #[view(getAccountStatus)]
+    fn get_account_status(&self, account: &ManagedAddress) -> AccountStatus<Self::Api> {
+        AccountStatus::<Self::Api> {
+            pending_rewards: self.get_pending_rewards(&account),
+            staked_amount: self.balance_of(&account).get(),
+        }
+    }
+
     #[view(getStatus)]
     fn get_status(&self) -> Status<Self::Api> {
         Status::<Self::Api> {
@@ -251,6 +266,7 @@ pub trait FarmContract {
             nb_stakers: self.all_stakers().len(),
             owner: self.blockchain().get_owner_address(),
             reward_per_second: self.reward_per_second().get(),
+            rewards_duration: self.rewards_duration().get(),
             rewards_token: self.rewards_token().get(),
             staking_token: self.staking_token().get(),
             total_staked: self.total_staked().get(),

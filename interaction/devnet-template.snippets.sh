@@ -27,7 +27,7 @@ upgrade() {
     echo 'You are about to upgrade current SC on devnet (Ctrl-C to abort)'
     read answer
 
-    mxpy contract upgrade --project=${PROJECT} --metadata-payable \
+    mxpy contract upgrade --bytecode=${BYTECODE} --metadata-payable \
         --keyfile=${1} --gas-limit=50000000 --outfile="deploy-devnet.interaction.json" \
         --proxy=${PROXY} --chain=${CHAIN} --recall-nonce --send ${SC_ADDRESS} || return
 

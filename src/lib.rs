@@ -47,7 +47,7 @@ pub trait FarmContract {
     #[only_owner]
     #[payable("*")]
     fn fund(&self) {
-        let (token_identifier, amount) = self.call_value().single_fungible_esdt();
+        let (token_identifier, payment_amount) = self.call_value().single_fungible_esdt();
 
         require!(
             token_identifier == self.rewards_token().get(),
@@ -57,20 +57,15 @@ pub trait FarmContract {
         let block_ts = self.blockchain().get_block_timestamp();
         if block_ts >= self.finish_at().get() {
             self.reward_per_second()
-                .set(amount / self.rewards_duration().get());
+                .set(payment_amount.clone() / self.rewards_duration().get());
         } else {
             let leftover = self
                 .reward_per_second()
                 .get()
                 .mul(self.finish_at().get() - block_ts);
             self.reward_per_second()
-                .set((amount + leftover) / self.rewards_duration().get());
+                .set((payment_amount.clone() + leftover) / self.rewards_duration().get());
         }
-
-        let balance = self.blockchain().get_sc_balance(
-            &EgldOrEsdtTokenIdentifier::esdt(self.rewards_token().get()),
-            0,
-        );
 
         self.updated_at().set(block_ts);
 
@@ -78,8 +73,8 @@ pub trait FarmContract {
         self.finish_at().set(finish_at);
 
         require!(
-            balance == self.reward_per_second().get() * (finish_at - block_ts),
-            "Invalid rewards balance"
+            payment_amount == self.reward_per_second().get() * (finish_at - block_ts),
+            "Invalid payment amount"
         );
     }
 

@@ -35,7 +35,7 @@
       },
       "expect": {
         "status": "4",
-        "message": "str:Invalid rewards balance",
+        "message": "str:Invalid payment amount",
         "gas": "*",
         "refund": "*"
       }

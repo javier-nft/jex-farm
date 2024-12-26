@@ -5,7 +5,8 @@ multiversx_sc::derive_imports!();
 
 const SAFETY_CONSTANT: u64 = 1_000_000_000_000_000_000u64;
 
-#[derive(TopEncode, TypeAbi)]
+#[type_abi]
+#[derive(TopEncode)]
 pub struct Status<M: ManagedTypeApi> {
     finish_at: u64,
     nb_stakers: usize,
@@ -17,7 +18,8 @@ pub struct Status<M: ManagedTypeApi> {
     total_staked: BigUint<M>,
 }
 
-#[derive(TopEncode, TypeAbi)]
+#[type_abi]
+#[derive(TopEncode)]
 pub struct AccountStatus<M: ManagedTypeApi> {
     staked_amount: BigUint<M>,
     pending_rewards: BigUint<M>,
@@ -53,6 +55,8 @@ pub trait FarmContract {
             token_identifier == self.rewards_token().get(),
             "Wrong rewards token"
         );
+
+        self.update_reward(&ManagedAddress::zero());
 
         let block_ts = self.blockchain().get_block_timestamp();
         if block_ts >= self.finish_at().get() {
@@ -221,9 +225,11 @@ pub trait FarmContract {
         self.reward_per_token().set(self.compute_reward_per_token());
         self.updated_at().set(self.last_time_reward_applicable());
 
-        self.rewards(&account).set(self.earned(&account));
-        self.user_reward_per_token_paid(&account)
-            .set(self.reward_per_token().get());
+        if account != &ManagedAddress::zero() {
+            self.rewards(&account).set(self.earned(&account));
+            self.user_reward_per_token_paid(&account)
+                .set(self.reward_per_token().get());
+        }
     }
 
     fn withdraw_for_account(&self, account: &ManagedAddress, amount: &BigUint) {

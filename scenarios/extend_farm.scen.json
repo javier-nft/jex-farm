@@ -1,0 +1,75 @@
+{
+  "name": "extend farm (nominal)",
+  "steps": [
+    {
+      "step": "externalSteps",
+      "path": "stake_nominal_1.scen.json"
+    },
+    {
+      "step": "setState",
+      "accounts": {
+        "address:owner": {
+          "nonce": "1",
+          "balance": "0",
+          "esdt": {
+            "str:RTOK-000000": "50000000,000000"
+          }
+        }
+      },
+      "currentBlockInfo": {
+        "blockTimestamp": "103,000,000"
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "extendFarm",
+      "tx": {
+        "from": "address:owner",
+        "to": "sc:farm",
+        "function": "fund",
+        "esdtValue": [
+          {
+            "tokenIdentifier": "str:RTOK-000000",
+            "value": "50000000,000000"
+          }
+        ],
+        "gasLimit": "5,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "status": "0",
+        "message": "",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "checkState",
+      "accounts": {
+        "sc:farm": {
+          "nonce": "0",
+          "balance": "0",
+          "code": "*",
+          "esdt": {
+            "str:RTOK-000000": "60000000,000000"
+          },
+          "storage": {
+            "str:all_stakers.item|u32:1": "address:user1",
+            "str:all_stakers.len": "1",
+            "str:all_stakers.index|address:user1": "1",
+            "str:balance_of|address:user1": "10000,000000000000000000",
+            "str:finish_at": "105,000,000",
+            "str:rewards_duration": "2,000,000",
+            "str:reward_per_second": "25,000000",
+            "str:reward_per_token": "1000,000000",
+            "str:rewards_token": "str:RTOK-000000",
+            "str:staking_token": "str:STOK-000000",
+            "str:total_staked": "10000,000000000000000000",
+            "str:updated_at": "103,000,000"
+          }
+        },
+        "+": ""
+      }
+    }
+  ]
+}

@@ -44,14 +44,16 @@ terminate() {
 ##
 
 getAllStakers() {
+    SC_ADDRESS=erd1qqqqqqqqqqqqqpgqy2wsj4exvsjwhdv4xxvs2dywn6sc6pl66avsfz733x
     FROM=${1:-0}
     SIZE=${2:-10}
     mxpy contract query ${SC_ADDRESS} \
         --function "getAllStakers" --arguments "${FROM}" "${SIZE}" \
-        --proxy=${PROXY}
+        --proxy=${PROXY} | jq -r .[].hex | while read a; do mxpy wallet bech32 --encode $a; done
 }
 
 getBalanceOf() {
+    SC_ADDRESS=erd1qqqqqqqqqqqqqpgqy2wsj4exvsjwhdv4xxvs2dywn6sc6pl66avsfz733x
     read -p "Address: " ADDRESS
     ADDRESS="0x$(mxpy wallet bech32 --decode ${ADDRESS})"
     

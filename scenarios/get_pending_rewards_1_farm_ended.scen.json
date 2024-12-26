@@ -1,0 +1,47 @@
+{
+  "name": "get pending rewards (1) (farm ended)",
+  "steps": [
+    {
+      "step": "externalSteps",
+      "path": "stake_nominal_1.scen.json"
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "110000000"
+      }
+    },
+    {
+      "step": "scQuery",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user1"]
+      },
+      "expect": {
+        "out": ["10000000,000000"],
+        "status": "",
+        "logs": []
+      }
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "111000000"
+      }
+    },
+    {
+      "step": "scQuery",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user1"]
+      },
+      "expect": {
+        "out": ["10000000,000000"],
+        "status": "",
+        "logs": []
+      }
+    }
+  ]
+}

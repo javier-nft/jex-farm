@@ -1,7 +1,7 @@
 [package]
 name = "jex-sc-farm"
 version = "0.0.0"
-authors = [ "Aurélien Passion <aurelien.passion@gmail.com>",]
+authors = ["Aurélien Passion <aurelien.passion@gmail.com>"]
 edition = "2018"
 publish = false
 
@@ -11,8 +11,8 @@ path = "src/lib.rs"
 [dev-dependencies]
 num-bigint = "0.4.2"
 
-[dependencies.multiversx-sc]
-version = "0.46.1"
-
 [dev-dependencies.multiversx-sc-scenario]
-version = "0.46.1"
+version = "0.54.6"
+
+[dependencies.multiversx-sc]
+version = "0.54.6"

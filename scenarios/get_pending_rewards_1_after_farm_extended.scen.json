@@ -1,0 +1,47 @@
+{
+  "name": "get pending rewards (1) (after farm extended)",
+  "steps": [
+    {
+      "step": "externalSteps",
+      "path": "extend_farm.scen.json"
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "103,000,000"
+      }
+    },
+    {
+      "step": "scQuery",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user1"]
+      },
+      "expect": {
+        "out": ["10,000,000,000000"],
+        "status": "",
+        "logs": []
+      }
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "105,000,000"
+      }
+    },
+    {
+      "step": "scQuery",
+      "tx": {
+        "to": "sc:farm",
+        "function": "getPendingRewards",
+        "arguments": ["address:user1"]
+      },
+      "expect": {
+        "out": ["60,000,000,000000"],
+        "status": "",
+        "logs": []
+      }
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-BYTECODE=../output/jex-sc-farm.wasm
+BYTECODE=../output-docker/jex-sc-farm/jex-sc-farm.wasm
 PROXY=https://devnet-gateway.multiversx.com
 SC_ADDRESS=$(mxpy data load --key=address-devnet-template)
 CHAIN=D

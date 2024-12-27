@@ -28,7 +28,7 @@ upgrade() {
     read answer
 
     mxpy contract upgrade --bytecode=${BYTECODE} \
-        --keyfile=${1} --gas-limit=50000000 --outfile="deploy-mainnet.interaction.json" \
+        --keyfile=${1} --gas-limit=10000000 --outfile="deploy-mainnet.interaction.json" \
         --proxy=${PROXY} --chain=${CHAIN} --recall-nonce --send ${SC_ADDRESS} || return
 
     echo ""
